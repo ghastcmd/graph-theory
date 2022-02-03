@@ -2,30 +2,30 @@
 #include <vector>
 #include <limits>
 #include <utility>
-#include <queue>
-
 #include <deque>
-#include <algorithm>
-#include <sstream>
-#include <string>
 
 class graph
 {
 public:
-    graph(size_t vertices_size, std::vector<std::pair<int, int>> in_edges, std::vector<int> weights)
+    graph(size_t vertices_len, std::vector<std::pair<int, int>> in_edges, std::vector<int> weights)
+        : V(vertices_len+1)
     {
-        V.resize(vertices_size);
-        for (size_t i = 0; i < vertices_size; i++)
+        for (size_t i = 1; i <= vertices_len; i++)
         {
             V[i] = i;
         }
 
-        for (size_t i = 0; i < in_edges.size(); i++)
+        for (size_t i = 1; i < in_edges.size(); i++)
         {
-            const auto& vv = in_edges[i];
-            const auto& weight = weights[i];
+            const auto& vv = in_edges[i-1];
+            const auto& weight = weights[i-1];
             edges[vv.first].emplace_back(std::pair<int, int>{vv.second, weight});
         }
+    }
+
+    const size_t size() const
+    {
+        return V.size();
     }
 public:
     std::vector<int> V;
@@ -88,11 +88,10 @@ private:
     std::deque<std::pair<int, int>> m_values;
 };
 
-constexpr int INF = std::numeric_limits<int>::max();
-
-
 void dijkstra(graph g, int start_vertex)
 {
+    constexpr int INF = std::numeric_limits<int>::max();
+
     std::vector<int> dist(g.V.size());
     std::vector<bool> prev(g.V.size());
 
@@ -103,7 +102,6 @@ void dijkstra(graph g, int start_vertex)
     }
 
     dist[start_vertex] = 0;
-
 
     // declarar queue com os vértices e pesos com dist
     pqueue<int> queue(g.V, dist);
@@ -123,32 +121,6 @@ void dijkstra(graph g, int start_vertex)
             }
         }
     }
-}
-
-void print_deque(std::deque<std::pair<int, int>> queue)
-{
-    std::stringstream first_line;
-    std::stringstream second_line;
-    while (!queue.empty())
-    {
-        auto vv = queue.front();
-        queue.pop_front();
-        first_line << vv.first << ' ';
-        second_line << vv.second << ' ';
-    }
-    std::cout << first_line.str() << '\n' << second_line.str() << '\n'; 
-}
-
-
-template <typename AR = std::pair<int, int>>
-int compar(AR first_pair, AR second_pair)
-{
-    return first_pair.second <= second_pair.second;
-}
-
-bool is_space(char ch)
-{
-    return ch == ' ';
 }
 
 size_t get_numbers_from_str(const char *str, const char **ret_ptr, size_t max)
