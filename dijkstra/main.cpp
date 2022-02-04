@@ -3,6 +3,72 @@
 #include <limits>
 #include <utility>
 #include <deque>
+#include <algorithm>
+
+template <typename _ty_size>
+_ty_size get_numbers_from_str(const char *str, const char **ret_ptr, _ty_size max)
+{
+    auto not_space = [](char ch) {
+        return ch != ' ' && ch != '\n' && ch != '\r';
+    };
+
+    _ty_size count = 0;
+    if (not_space(*str))
+    {
+        ret_ptr[count] = str;
+        count += 1;
+        if (count == max) return count;
+    }
+
+    char c;
+    bool space_before = false;
+    while ((c = *str++))
+    {
+        if (not_space(c) && space_before)
+        {
+            ret_ptr[count] = str-1;
+            count += 1;
+            if (count == max) return count;
+        }
+
+        space_before = c == ' ';
+    }
+    
+    return count;
+}
+
+template <size_t size>
+inline constexpr void _assign(const char *n_str[size], size_t index, int& value)
+{
+    value = atoi(n_str[index]);
+}
+
+template <size_t size, typename _ty, typename... _args>
+inline constexpr void
+_assign(const char *n_str[size], size_t index, _ty& value, _args&... args)
+{
+    return (_assign<size>(n_str, index, value), _assign<size>(n_str, index + 1, args...));
+}
+
+template <size_t size, typename... _args>
+inline constexpr
+void assign(const char *n_str[size], _args&... args)
+{
+    return (_assign<size>(n_str, 0, args...));
+}
+
+template <size_t size, typename... _args>
+int parse_ints(const char *to_parse, _args&... args)
+{
+    const char *ret_str[size] {0};
+    auto count = get_numbers_from_str(to_parse, ret_str, size);
+    if (count > size)
+    {
+        std::cout << "Too many numbers\n";
+    }
+    assign<size>(ret_str, args...);
+    return count;
+}
 
 class graph
 {
@@ -123,70 +189,6 @@ void dijkstra(graph g, int start_vertex)
     }
 }
 
-size_t get_numbers_from_str(const char *str, const char **ret_ptr, size_t max)
-{
-    auto not_space = [](char ch) {
-        return ch != ' ' && ch != '\n' && ch != '\r';
-    };
-
-    size_t count = 0;
-    if (not_space(*str))
-    {
-        ret_ptr[count] = str;
-        count += 1;
-        if (count == max) return count;
-    }
-
-    char c;
-    bool space_before = false;
-    while ((c = *str++))
-    {
-        if (not_space(c) && space_before)
-        {
-            ret_ptr[count] = str-1;
-            count += 1;
-            if (count == max) return count;
-        }
-
-        space_before = c == ' ';
-    }
-    return count;
-}
-
-template <size_t size>
-inline constexpr void _assign(const char *n_str[size], size_t index, int& value)
-{
-    value = atoi(n_str[index]);
-}
-
-template <size_t size, typename _ty, typename ..._args>
-inline constexpr void
-_assign(const char *n_str[size], size_t index, _ty& value, _args&... args)
-{
-    return (_assign<size>(n_str, index, value), _assign<size>(n_str, index + 1, args...));
-}
-
-template <size_t size, typename ... _args>
-inline constexpr
-void assign(const char *n_str[size], _args& ... args)
-{
-    return (_assign<size>(n_str, 0, args...));
-}
-
-template <size_t size, typename ..._args>
-int parse_ints(const char *to_parse, _args&... args)
-{
-    const char *ret_str[size] {0};
-    auto count = get_numbers_from_str(to_parse, ret_str, size);
-    if (count > size)
-    {
-        std::cout << "Too many numbers\n";
-    }
-    puts("before the recursive call");
-    assign<size>(ret_str, args...);
-    return count;
-}
-
 int main(int argc, char **argv)
 {
     char input_line[32];
@@ -209,8 +211,6 @@ int main(int argc, char **argv)
         
         const char *ret_str[3];
         auto count = parse_ints<3>(input_line, vertice.first, vertice.second, weight);
-
-        puts("this the shits");
 
         if (count != 3)
         {
