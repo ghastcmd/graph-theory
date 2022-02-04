@@ -5,6 +5,7 @@
 #include <deque>
 #include <algorithm>
 #include <fstream>
+#include <string>
 
 template <typename _ty_size>
 _ty_size get_numbers_from_str(const char *str, const char **ret_ptr, _ty_size max)
@@ -63,6 +64,7 @@ int parse_ints(const char *to_parse, _args&... args)
 {
     const char *ret_str[size] {0};
     auto count = get_numbers_from_str(to_parse, ret_str, size);
+    
     if (count > size)
     {
         std::cout << "Too many numbers\n";
@@ -82,15 +84,17 @@ struct is_stream<std::istream> {
 };
 
 template <>
-struct is_stream<std::fstream> {
+struct is_stream<std::ifstream> {
     static constexpr bool value = true;
 };
 
 class graph
 {
 public:
+    graph() {}
+
     template <typename _stream>
-    graph(_stream& in_stream)
+    void from_file_stream(_stream& in_stream)
     {
         static_assert(is_stream<_stream>::value, "Invalid stream type");
 
@@ -98,12 +102,13 @@ public:
 
         char input_line[ibuffer_len];
         in_stream.getline(input_line, ibuffer_len);
+        // std::getline(in_stream, input_line, ibuffer_len);
 
         int num_vertex, num_edges;
         parse_ints<2>(input_line, num_vertex, num_edges);
 
-        V.resize(num_vertex);
-        edges.resize(num_edges);
+        V.resize(num_vertex + 1);
+        edges.resize(num_edges + 1);
 
         for (size_t i = 1; i <= num_vertex; i++)
         {
@@ -122,9 +127,7 @@ public:
                 weight = 1;
             }
 
-            auto& loc = edges[edge1];
-
-            loc.push_back(std::pair<int, int>(edge2, weight));
+            edges[edge1].push_back(std::pair<int, int>{edge2, weight});
         }
     }
 
@@ -230,19 +233,38 @@ void dijkstra(graph g, int start_vertex)
 
 int main(int argc, char **argv)
 {
-    std::fstream file ("input_w.dat");
+    std::ifstream file ("input_w.dat");
     // std::istream ff = file;
     // std::fstream file = std::cin;
-    
-    graph G(file);
+
+    // if (!file)
+    // {
+    //     std::cout << "File opened incorrectly\n";
+    // }
+
+    bool flag = true;
+
+    graph G;
+
+    if (flag)
+    {
+        G.from_file_stream(file);
+    }
+    else
+    {
+        G.from_file_stream(std::cin);
+    }
+
+    // puts("this main");
+
+    // graph G(file);
 
     for (int i = 0, max_size = G.edges.size(); i < max_size; i++)
     {
-        for (auto& val: G.edges[i])
+        for (int j = 0, nother_max = G.edges[i].size(); j < nother_max; j++)
         {
+            auto& val = G.edges[i][j];
             printf("%i %i %i\n", i, val.first, val.second);
         }
     }
-
-    return 0;
 }

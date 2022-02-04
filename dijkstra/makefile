@@ -15,3 +15,6 @@ run: $(name)
 clean:
 	del dijkstra.exe
 	del dijkstra
+
+pipe: $(name)
+	./dijkstra.out < input_w.dat
