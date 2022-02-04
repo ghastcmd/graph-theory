@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <fstream>
 #include <string>
+#include <array>
 
 template <typename _ty_size>
 _ty_size get_numbers_from_str(const char *str, const char **ret_ptr, _ty_size max)
@@ -36,6 +37,11 @@ _ty_size get_numbers_from_str(const char *str, const char **ret_ptr, _ty_size ma
         space_before = c == ' ';
     }
 
+    // for (size_t i = count; i < max; i++)
+    // {
+    //     ret_ptr[i] = "";
+    // }
+
     return count;
 }
 
@@ -64,11 +70,9 @@ int parse_ints(const char *to_parse, _args&... args)
 {
     const char *ret_str[size] {0};
     auto count = get_numbers_from_str(to_parse, ret_str, size);
+    
+    for (int i = count; i < size && (ret_str[i] = ""); i++);
 
-    if (count > size)
-    {
-        std::cout << "Too many numbers\n";
-    }
     assign<size>(ret_str, args...);
     return count;
 }
@@ -232,9 +236,18 @@ void dijkstra(graph g, int start_vertex)
     }
 }
 
+// int main()
+// {
+//     const char *str = "";
+
+//     int a = atoi(str);
+
+//     printf("%i\n", a);
+// }
+
 int main(int argc, char **argv)
 {
-    std::ifstream file ("input_w.dat");
+    std::ifstream file ("input_wo.dat");
     // std::istream ff = file;
     // std::fstream file = std::cin;
 
