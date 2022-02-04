@@ -71,11 +71,29 @@ int parse_ints(const char *to_parse, _args&... args)
     return count;
 }
 
+template <typename _ty>
+struct is_stream {
+    static constexpr bool value = false;
+};
+
+template <>
+struct is_stream<std::istream> {
+    static constexpr bool value = true;
+};
+
+template <>
+struct is_stream<std::fstream> {
+    static constexpr bool value = true;
+};
+
 class graph
 {
 public:
-    graph(std::fstream& in_stream)
+    template <typename _stream>
+    graph(_stream& in_stream)
     {
+        static_assert(is_stream<_stream>::value, "Invalid stream type");
+
         constexpr size_t ibuffer_len = 64;
 
         char input_line[ibuffer_len];
@@ -213,6 +231,7 @@ void dijkstra(graph g, int start_vertex)
 int main(int argc, char **argv)
 {
     std::fstream file ("input_w.dat");
+    // std::istream ff = file;
     // std::fstream file = std::cin;
     
     graph G(file);
