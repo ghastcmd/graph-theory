@@ -37,11 +37,6 @@ _ty_size get_numbers_from_str(const char *str, const char **ret_ptr, _ty_size ma
         space_before = c == ' ';
     }
 
-    // for (size_t i = count; i < max; i++)
-    // {
-    //     ret_ptr[i] = "";
-    // }
-
     return count;
 }
 
@@ -68,7 +63,7 @@ void assign(const char *n_str[size], _args&... args)
 template <size_t size, typename... _args>
 int parse_ints(const char *to_parse, _args&... args)
 {
-    const char *ret_str[size] {0};
+    const char *ret_str[size];
     auto count = get_numbers_from_str(to_parse, ret_str, size);
     
     for (int i = count; i < size && (ret_str[i] = ""); i++);
@@ -92,6 +87,11 @@ struct is_stream<std::ifstream> {
     static constexpr bool value = true;
 };
 
+template <>
+struct is_stream<std::fstream> {
+    static constexpr bool value = true;
+};
+
 class graph
 {
 public:
@@ -106,7 +106,6 @@ public:
 
         char input_line[ibuffer_len];
         in_stream.getline(input_line, ibuffer_len);
-        // std::getline(in_stream, input_line, ibuffer_len);
 
         int num_vertex, num_edges;
         parse_ints<2>(input_line, num_vertex, num_edges);
