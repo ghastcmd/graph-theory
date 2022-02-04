@@ -4,6 +4,7 @@
 #include <utility>
 #include <deque>
 #include <algorithm>
+#include <fstream>
 
 template <typename _ty_size>
 _ty_size get_numbers_from_str(const char *str, const char **ret_ptr, _ty_size max)
@@ -33,7 +34,7 @@ _ty_size get_numbers_from_str(const char *str, const char **ret_ptr, _ty_size ma
 
         space_before = c == ' ';
     }
-    
+
     return count;
 }
 
@@ -73,19 +74,37 @@ int parse_ints(const char *to_parse, _args&... args)
 class graph
 {
 public:
-    graph(size_t vertices_len, std::vector<std::pair<int, int>> in_edges, std::vector<int> weights)
-        : V(vertices_len+1)
+    graph(std::fstream& in_stream)
     {
-        for (size_t i = 1; i <= vertices_len; i++)
+        char input_line[32];
+        in_stream.getline(input_line, 32);
+
+        int num_vertex, num_edges;
+        parse_ints<2>(input_line, num_vertex, num_edges);
+
+        V.resize(num_vertex);
+        edges.resize(num_edges);
+
+        for (size_t i = 1; i <= num_vertex; i++)
         {
             V[i] = i;
         }
 
-        for (size_t i = 1; i < in_edges.size(); i++)
+        for (size_t i = 0; i < num_edges; i++)
         {
-            const auto& vv = in_edges[i-1];
-            const auto& weight = weights[i-1];
-            edges[vv.first].emplace_back(std::pair<int, int>{vv.second, weight});
+            int edge1, edge2, weight;
+
+            in_stream.getline(input_line, 32);
+            auto count = parse_ints<3>(input_line, edge1, edge2, weight);
+
+            if (count != 3)
+            {
+                weight = 1;
+            }
+
+            auto& loc = edges[edge1];
+
+            loc.push_back(std::pair<int, int>(edge2, weight));
         }
     }
 
@@ -191,46 +210,18 @@ void dijkstra(graph g, int start_vertex)
 
 int main(int argc, char **argv)
 {
-    char input_line[32];
+    std::fstream file ("input_w.dat");
     
-    const char *ret_str[3];
-    std::cin.getline(input_line, 32);
+    graph G(file);
 
-    int num_vertex, len_edges;
-    parse_ints<2>(input_line, num_vertex, len_edges);
-
-    std::vector<std::pair<int, int>> edges (len_edges);
-    std::vector<int> weights (len_edges);
-
-    for (size_t i = 0; i < len_edges; i++)
+    for (int i = 0, max_size = G.edges.size(); i < max_size; i++)
     {
-        auto& weight = weights[i];
-        auto& vertice = edges[i];
-
-        std::cin.getline(input_line, 32);
-        
-        const char *ret_str[3];
-        auto count = parse_ints<3>(input_line, vertice.first, vertice.second, weight);
-
-        if (count != 3)
+        for (auto& val: G.edges[i])
         {
-            weight = 1;
+            printf("%i %i %i\n", i, val.first, val.second);
+            puts("invalid");
         }
     }
-
-    for (auto& val: edges)
-    {
-        printf("%i %i\n", val.first, val.second);
-    }
-
-    for (auto& val: weights)
-    {
-        std::cout << val << '\n';
-    }
-
-    // graph G((size_t)num_vertex, edges, weights);
-
-    // dijkstra(G, 1);
 
     return 0;
 }
