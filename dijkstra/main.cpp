@@ -76,8 +76,10 @@ class graph
 public:
     graph(std::fstream& in_stream)
     {
-        char input_line[32];
-        in_stream.getline(input_line, 32);
+        constexpr size_t ibuffer_len = 64;
+
+        char input_line[ibuffer_len];
+        in_stream.getline(input_line, ibuffer_len);
 
         int num_vertex, num_edges;
         parse_ints<2>(input_line, num_vertex, num_edges);
@@ -94,7 +96,7 @@ public:
         {
             int edge1, edge2, weight;
 
-            in_stream.getline(input_line, 32);
+            in_stream.getline(input_line, ibuffer_len);
             auto count = parse_ints<3>(input_line, edge1, edge2, weight);
 
             if (count != 3)
@@ -211,6 +213,7 @@ void dijkstra(graph g, int start_vertex)
 int main(int argc, char **argv)
 {
     std::fstream file ("input_w.dat");
+    // std::fstream file = std::cin;
     
     graph G(file);
 
@@ -219,7 +222,6 @@ int main(int argc, char **argv)
         for (auto& val: G.edges[i])
         {
             printf("%i %i %i\n", i, val.first, val.second);
-            puts("invalid");
         }
     }
 
