@@ -64,7 +64,7 @@ int parse_ints(const char *to_parse, _args&... args)
 {
     const char *ret_str[size] {0};
     auto count = get_numbers_from_str(to_parse, ret_str, size);
-    
+
     if (count > size)
     {
         std::cout << "Too many numbers\n";
@@ -216,16 +216,17 @@ void dijkstra(graph g, int start_vertex)
 
     while (!queue.empty())
     {
-        auto u = queue.pop_front(); // acessa o primeiro item da fila
+        const auto u = queue.pop_front(); // acessa o primeiro item da fila
         
         for (auto v: g.edges[u])
         {
-            auto ndist = dist[u] + v.second;
-            if (dist[v.first] > ndist)
+            const auto ndist = dist[u] + v.second;
+            const auto vert = v.first;
+            if (dist[vert] > ndist)
             {
-                dist[v.first] = ndist;
-                prev[v.first] = u;
-                queue.set_priority(v.first, dist[v.first]);
+                dist[vert] = ndist;
+                prev[vert] = u;
+                queue.set_priority(vert, dist[vert]);
             }
         }
     }
