@@ -67,7 +67,6 @@ void usage(int argc, char **argv)
 -h           : mostra o help (este texto)
 -f <arquivo> : indica o "arquivo" que contém o grafo de entrada
 -o <arquivo> : redireciona a saida para o "arquivo"
--s           : mostra a solução (em ordem crescente)
 -i <vertice> : vértice inicial (dependendo do algoritmo)
 -l <vertice> : vértice final (dependendo do algoritmo)
 )");
@@ -86,6 +85,11 @@ int main(int argc, char **argv)
     if (params.setted_file_input)
     {
         std::ifstream in_file (params.file_input_path);
+        if (!in_file)
+        {
+            std::cout << "File " << params.file_input_path <<  " does not exist";
+            return -1;
+        }
         G.from_file_stream(in_file);
     }
     else
@@ -100,6 +104,11 @@ int main(int argc, char **argv)
     if (params.setted_file_output)
     {
         std::ofstream out_file (params.file_output_path);
+        if (!out_file)
+        {
+            std::cout << "File " << params.file_output_path <<  " does not exist";
+            return -1;
+        }
         out_file << out_stream.rdbuf();
     }
     else
