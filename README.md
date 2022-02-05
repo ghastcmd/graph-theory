@@ -1,8 +1,11 @@
 Algoritmos a serem explorados serão:
 
 Dijkstra
+
 Prim
-A*
+
+Ford-Fulkerson
+
 Bellman-Ford
 
 Building system utilizado:
