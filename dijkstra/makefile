@@ -6,11 +6,13 @@ CC = g++
 name = dijkstra.out
 endif
 
+RUN_ARGS = -f input_w.dat -s -h
+
 $(name): main.cpp
 	$(CC) $< -o $(name)
 
 run: $(name)
-	./$(name)
+	./$(name) $(RUN_ARGS)
 
 clean:
 	del dijkstra.exe
