@@ -67,8 +67,8 @@ void usage(int argc, char **argv)
 -h           : mostra o help (este texto)
 -f <arquivo> : indica o "arquivo" que contém o grafo de entrada
 -o <arquivo> : redireciona a saida para o "arquivo"
--i <vertice> : vértice inicial (dependendo do algoritmo)
--l <vertice> : vértice final (dependendo do algoritmo)
+-i <vertice> : vértice inicial
+-l <vertice> : vértice final
 )");
 
     std::cout << "O uso do programa é:\n" << argv[0] << help;
