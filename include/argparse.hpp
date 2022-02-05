@@ -9,7 +9,7 @@
 
 void usage_error(int argc, char **argv)
 {
-    std::cout << "Uso inapropriado do programa.\nDigite" << argv[0] << "-h para saber mais.\n";
+    std::cout << "Uso inapropriado do programa.\nDigite " << argv[0] << " -h para saber mais.\n";
 }
 
 bool str_opt_ncmp(const char *in_str, const char *cmp_str, size_t n)
@@ -26,6 +26,7 @@ bool str_opt_ncmp(const char *in_str, const char *cmp_str, size_t n)
 
 enum class types_of_args
 {
+    error,
     help,
     input,
     output,
@@ -74,6 +75,11 @@ void parse_args(std::vector<std::pair<types_of_args, std::string>>& result, int 
             check_error(i + 1);
             result.push_back({types_of_args::out_vertex, argv[++i]});
         }
+        else
+        {
+            result.push_back({types_of_args::error, ""});
+            return;
+        }
     }
 }
 
@@ -101,6 +107,10 @@ void program_parameters::get_paramers(int argc, char **argv, std::function<void(
     {
         switch (value.first)
         {
+            case types_of_args::error:
+                usage_error(argc, argv);
+                exit(-1);
+            break;
             case types_of_args::help:
                 usage(argc, argv);
                 exit(0);

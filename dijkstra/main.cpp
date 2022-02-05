@@ -70,7 +70,7 @@ void usage(int argc, char **argv)
 -s           : mostra a solução (em ordem crescente)
 -i <vertice> : vértice inicial (dependendo do algoritmo)
 -l <vertice> : vértice final (dependendo do algoritmo)
-    )");
+)");
 
     std::cout << "O uso do programa é:\n" << argv[0] << help;
 }
