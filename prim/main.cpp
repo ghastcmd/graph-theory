@@ -9,55 +9,85 @@
 
 #include "../include/argparse.hpp"
 
+using vec_pair = std::vector<std::pair<int, int>>;
+
+void get_intersection(vec_pair& inter, vec_pair& vec1, pqueue<int>& queue)
+{
+    for (const auto& v1: vec1)
+    {
+        for (const auto& q: queue)
+        {
+            if (v1.first == q.second)
+            {
+                inter.push_back(v1);
+            }
+        }
+    }
+}
+
 void prim(graph g, std::stringstream& out_stream, int start_vertex, int out_vert, bool setted_solution)
 {
     (void)setted_solution;
     
     constexpr int INF = std::numeric_limits<int>::max();
 
-    std::vector<int> dist(g.V.size());
-    std::vector<bool> prev(g.V.size());
+    std::vector<int> cost(g.V.size());
+    std::vector<int> prev(g.V.size());
+    std::vector<std::pair<int, int>> solution;
 
     for (auto v: g.V)
     {
-        dist[v] = INF;
+        cost[v] = INF;
         prev[v] = -1;
     }
 
-    dist[start_vertex] = 0;
+    cost[start_vertex] = 0;
 
     // declarar queue com os vértices e pesos com dist
-    pqueue<int> queue(g.V, dist);
+    pqueue<int> queue(g.V, cost);
+
+    vec_pair intersection;
 
     while (!queue.empty())
     {
-        const auto u = queue.pop_front(); // acessa o primeiro item da fila
-        
-        for (auto v: g.edges[u])
+        const auto v = queue.pop_front(); // acessa o primeiro item da fila
+
+        if (prev[v] != -1)
+            solution.push_back({prev[v], v});
+
+        get_intersection(intersection, g.edges[v], queue);
+
+        for (const auto& z: intersection)
         {
-            const auto ndist = dist[u] + v.second;
-            const auto vert = v.first;
-            if (dist[vert] > ndist)
+            const auto weight = z.second;
+            const auto vert = z.first;
+            if (cost[vert] > weight)
             {
-                dist[vert] = ndist;
-                prev[vert] = u;
-                queue.set_priority(vert, dist[vert]);
+                cost[vert] = weight;
+                prev[vert] = v;
+                queue.set_priority(vert, cost[vert]);
             }
         }
+        intersection.clear();
     }
 
-    if (out_vert != 0)
+    if (setted_solution)
     {
-        out_stream << dist[out_vert] << '\n';
+        std::sort(solution.begin(), solution.end());
+        for (const auto& val: solution)
+        {
+            out_stream << '(' << val.first << ',' << val.second << ") ";
+        }
+        out_stream << '\n';
     }
     else
     {
-        for (size_t i = 1, max = dist.size(); i < max; i++)
+        size_t sum = 0;
+        for (size_t i = 1, max = cost.size(); i < max; i++)
         {
-            const auto& val = dist[i];
-            out_stream << i << ':' << val << ' ';
+            sum += cost[i];
         }
-        out_stream << '\n';
+        out_stream << sum << '\n';
     }
 }
 
@@ -86,6 +116,11 @@ int main(int argc, char **argv)
     if (params.setted_file_input)
     {
         std::ifstream in_file (params.file_input_path);
+        if (!in_file)
+        {
+            std::cout << "File " << params.file_input_path <<  " does not exist";
+            return -1;
+        }
         G.from_file_stream(in_file);
     }
     else
@@ -100,6 +135,11 @@ int main(int argc, char **argv)
     if (params.setted_file_output)
     {
         std::ofstream out_file (params.file_output_path);
+        if (!out_file)
+        {
+            std::cout << "File " << params.file_output_path <<  " does not exist";
+            return -1;
+        }
         out_file << out_stream.rdbuf();
     }
     else
