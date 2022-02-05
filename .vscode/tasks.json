@@ -3,10 +3,30 @@
     "tasks": [
         {
             "type": "cppbuild",
-            "label": "script: make.exe arquivo de build ativo",
+            "label": "script: make.exe dijkstra build",
             "command": "make",
             "args": [
                 "d_dijkstra",
+                "ARGS=run"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "detail": "script runner: make"
+        },
+        {
+            "type": "cppbuild",
+            "label": "script: make.exe prim build",
+            "command": "make",
+            "args": [
+                "d_prim",
                 "ARGS=run"
             ],
             "options": {
