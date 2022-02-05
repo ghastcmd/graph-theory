@@ -9,7 +9,9 @@ template <typename _ty>
 class pqueue
 {
 public:
-    pqueue(std::vector<_ty> values, std::vector<_ty> weights);
+    using iterator = typename std::deque<std::pair<int, int>>::iterator;
+
+    pqueue(std::vector<_ty>& values, std::vector<_ty>& weights);
 
     void set_priority(size_t index, int new_value);
 
@@ -17,25 +19,30 @@ public:
 
     _ty pop_front();
 
+    iterator begin();
+
+    iterator end();
+
     bool empty() const;
 private:
+
     std::deque<std::pair<int, int>> m_values;
 };
 
 template <typename _ty>
-pqueue<_ty>::pqueue(std::vector<_ty> values, std::vector<_ty> weights)
+pqueue<_ty>::pqueue(std::vector<_ty>& values, std::vector<_ty>& weights)
 {
     if (values.size() != weights.size())
     {
         std::cout << "Invalid sizes for values and weights vector\n";
     }
 
-    m_values.resize(values.size());
+    m_values.resize(values.size() - 1);
 
-    for (size_t i = 0; i < m_values.size(); i++)
+    for (size_t i = 1, max = values.size(); i < max; i++)
     {
-        m_values[i].first = weights[i];
-        m_values[i].second = values[i];
+        m_values[i-1].first = weights[i];
+        m_values[i-1].second = values[i];
     }
 
     std::sort(m_values.begin(), m_values.end());
@@ -68,6 +75,18 @@ _ty pqueue<_ty>::pop_front()
     _ty element = front();
     m_values.pop_front();
     return element;
+}
+
+template <typename _ty>
+typename pqueue<_ty>::iterator pqueue<_ty>::begin()
+{
+    return m_values.begin();
+}
+
+template <typename _ty>
+typename pqueue<_ty>::iterator pqueue<_ty>::end()
+{
+    return m_values.end();
 }
 
 template <typename _ty>
