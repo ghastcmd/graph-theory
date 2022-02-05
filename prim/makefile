@@ -6,7 +6,7 @@ CC = g++
 name = dijkstra.out
 endif
 
-RUN_ARGS = -f ../input_w.dat -s
+RUN_ARGS = -f ../input_w.dat -i 1
 
 $(name): main.cpp
 	$(CC) $< -o $(name)

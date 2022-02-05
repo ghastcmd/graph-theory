@@ -4,8 +4,5 @@ ARGS =
 d_dijkstra:
 	$(MAKE) -C dijkstra $(ARGS)
 
-run_dijkstra:
-	$(MAKE) -C dijkstra run
-
-# dijkstra run:
-# 	$(MAKE) -C dijkstra run
+d_prim:
+	$(MAKE) -C prim $(ARGS)
