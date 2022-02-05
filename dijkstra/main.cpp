@@ -5,7 +5,7 @@
 #include "../include/graph.hpp"
 #include "../include/pqueue.hpp"
 
-void dijkstra(graph g, int start_vertex)
+void dijkstra(graph g, int start_vertex, int out_vert = 0)
 {
     constexpr int INF = std::numeric_limits<int>::max();
 
@@ -39,19 +39,29 @@ void dijkstra(graph g, int start_vertex)
             }
         }
     }
+
+    if (out_vert != 0)
+    {
+        std::cout << dist[out_vert] << '\n';
+    }
+    else
+    {
+        for (size_t i = 1, max = dist.size(); i < max; i++)
+        {
+            const auto& val = dist[i];
+            std::cout << i << ':' << val << ' ';
+        }
+        std::cout << '\n';
+    }
 }
 
 int main(int argc, char **argv)
 {
-    std::ifstream file ("input_wo.dat");
-    // std::istream ff = file;
-    // std::fstream file = std::cin;
+    
 
-    // if (!file)
-    // {
-    //     std::cout << "File opened incorrectly\n";
-    // }
 
+    std::ifstream file ("input_w.dat");
+    
     bool flag = true;
 
     graph G;
@@ -77,6 +87,8 @@ int main(int argc, char **argv)
             printf("%i %i %i\n", i, val.first, val.second);
         }
     }
+
+    dijkstra(G, 1);
 
     return 0;
 }

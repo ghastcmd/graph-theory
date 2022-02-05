@@ -3,8 +3,6 @@
 #include <fstream>
 #include <istream>
 #include <vector>
-#include <deque>
-#include <algorithm>
 
 template <typename _ty_size>
 _ty_size get_numbers_from_str(const char *str, const char **ret_ptr, _ty_size max)

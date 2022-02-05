@@ -1,6 +1,8 @@
 #pragma once
 
 #include <vector>
+#include <deque>
+#include <algorithm>
 
 template <typename _ty>
 class pqueue
