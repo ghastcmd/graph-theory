@@ -2,7 +2,8 @@
 #include <vector>
 #include <limits>
 
-#include "../impl.hpp"
+#include "../include/graph.hpp"
+#include "../include/pqueue.hpp"
 
 void dijkstra(graph g, int start_vertex)
 {
