@@ -15,6 +15,10 @@ _ty_size get_numbers_from_str(const char *str, const char **ret_ptr, _ty_size ma
         return ch != ' ' && ch != '\n' && ch != '\r';
     };
 
+    auto is_space = [](char ch) {
+        return ch == ' ' || ch == '\n' || ch == '\r';
+    };
+
     _ty_size count = 0;
     if (not_space(*str))
     {
@@ -34,8 +38,11 @@ _ty_size get_numbers_from_str(const char *str, const char **ret_ptr, _ty_size ma
             if (count == max) return count;
         }
 
-        space_before = c == ' ';
+        space_before = is_space(c);
     }
+
+    for (int i = count; i < max && (ret_ptr[i] = ""); i++);
+
 
     return count;
 }
@@ -65,8 +72,6 @@ int parse_ints(const char *to_parse, _args&... args)
 {
     const char *ret_str[size];
     auto count = get_numbers_from_str(to_parse, ret_str, size);
-    
-    for (int i = count; i < size && (ret_str[i] = ""); i++);
 
     assign<size>(ret_str, args...);
     return count;
