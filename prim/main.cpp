@@ -33,7 +33,6 @@ void prim(graph g, std::stringstream& out_stream, int start_vertex, int out_vert
 
     std::vector<int> cost(g.V.size());
     std::vector<int> prev(g.V.size());
-    std::vector<std::pair<int, int>> solution;
 
     for (auto v: g.V)
     {
@@ -50,21 +49,18 @@ void prim(graph g, std::stringstream& out_stream, int start_vertex, int out_vert
 
     while (!queue.empty())
     {
-        const auto v = queue.pop_front(); // acessa o primeiro item da fila
+        const auto u = queue.pop_front(); // acessa o primeiro item da fila
 
-        if (prev[v] != -1)
-            solution.push_back({prev[v], v});
+        get_intersection(intersection, g.edges[u], queue);
 
-        get_intersection(intersection, g.edges[v], queue);
-
-        for (const auto& z: intersection)
+        for (const auto& v: intersection)
         {
-            const auto weight = z.second;
-            const auto vert = z.first;
+            const auto weight = v.second;
+            const auto vert = v.first;
             if (cost[vert] > weight)
             {
                 cost[vert] = weight;
-                prev[vert] = v;
+                prev[vert] = u;
                 queue.set_priority(vert, cost[vert]);
             }
         }
@@ -73,6 +69,13 @@ void prim(graph g, std::stringstream& out_stream, int start_vertex, int out_vert
 
     if (setted_solution)
     {
+        std::vector<std::pair<int, int>> solution;
+        for (size_t i = 1, max_n = prev.size(); i < max_n; i++)
+        {
+            const auto val = prev[i];
+            if (val != -1)
+                solution.push_back({prev[i], i});
+        }
         std::sort(solution.begin(), solution.end());
         for (const auto& val: solution)
         {
