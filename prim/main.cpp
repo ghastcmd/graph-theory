@@ -25,7 +25,7 @@ void get_intersection(vec_pair& inter, vec_pair& vec1, pqueue<int>& queue)
     }
 }
 
-void prim(graph g, std::stringstream& out_stream, int start_vertex, bool setted_solution)
+void prim(graph& g, std::stringstream& out_stream, int start_vertex, bool setted_solution)
 {    
     constexpr int INF = std::numeric_limits<int>::max();
 

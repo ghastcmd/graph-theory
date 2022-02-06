@@ -9,7 +9,7 @@
 
 #include "../include/argparse.hpp"
 
-void dijkstra(graph g, std::stringstream& out_stream, int start_vertex, int out_vert, bool setted_solution)
+void dijkstra(graph& g, std::stringstream& out_stream, int start_vertex, int out_vert, bool setted_solution)
 {
     (void)setted_solution;
     

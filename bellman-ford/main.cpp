@@ -9,7 +9,7 @@
 
 #include "../include/argparse.hpp"
 
-void bellman_ford(graph g, std::stringstream& out_stream, int start_vertex, int out_vert, bool setted_solution)
+void bellman_ford(graph& g, std::stringstream& out_stream, int start_vertex, int out_vert, bool setted_solution)
 {
     (void)setted_solution;
     
