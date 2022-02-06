@@ -9,22 +9,6 @@
 
 #include "../include/argparse.hpp"
 
-using vec_pair = std::vector<std::pair<int, int>>;
-
-void get_intersection(vec_pair& inter, vec_pair& vec1, pqueue<int>& queue)
-{
-    for (const auto& v1: vec1)
-    {
-        for (const auto& q: queue)
-        {
-            if (v1.first == q.second)
-            {
-                inter.push_back(v1);
-            }
-        }
-    }
-}
-
 void bellman_ford(graph g, std::stringstream& out_stream, int start_vertex, int out_vert, bool setted_solution)
 {
     (void)setted_solution;
