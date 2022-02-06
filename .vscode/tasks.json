@@ -40,6 +40,26 @@
                 "isDefault": true
             },
             "detail": "script runner: make"
-        }
+        },
+        {
+            "type": "cppbuild",
+            "label": "script: make.exe bellman-ford build",
+            "command": "make",
+            "args": [
+                "d_bellman-ford",
+                "ARGS=run"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "detail": "script runner: make"
+        },
     ]
 }

@@ -6,3 +6,6 @@ d_dijkstra:
 
 d_prim:
 	$(MAKE) -C prim $(ARGS)
+
+d_bellman-ford:
+	$(MAKE) -C bellman-ford $(ARGS)
