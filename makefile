@@ -9,3 +9,6 @@ d_prim:
 
 d_bellman-ford:
 	$(MAKE) -C bellman-ford $(ARGS)
+
+d_ford-fulkerson:
+	$(MAKE) -C bellman-ford $(ARGS)

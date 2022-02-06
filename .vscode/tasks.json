@@ -61,5 +61,25 @@
             },
             "detail": "script runner: make"
         },
+        {
+            "type": "cppbuild",
+            "label": "script: make.exe ford-fulkerson build",
+            "command": "make",
+            "args": [
+                "d_ford-fulkerson",
+                "ARGS=run"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "detail": "script runner: make"
+        },
     ]
 }
