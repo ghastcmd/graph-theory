@@ -79,18 +79,33 @@ void ford_fulkerson(graph& g, std::stringstream& out_stream, int start_vertex, i
             path_flow = std::min(path_flow, residual_flux[u][v]);
         }
  
+        // Essa parte atualiza os fluxos da parte residual
         for (v = out_vertex; v != start_vertex; v = parents[v]) {
             u = parents[v];
             residual_flux[u][v] -= path_flow;
             residual_flux[v][u] += path_flow;
         }
- 
+
         max_flow += path_flow;
     }
 
     if (!setted_solution)
     {
-        std::cout << max_flow << '\n';
+        out_stream << max_flow << '\n';
+    }
+    else
+    {
+        for (size_t i = 1; i < vert_size; i++)
+        {
+            for (size_t j = 1; j < vert_size; j++)
+            {
+                const auto val = residual_flux[i][j];
+                if (val != 0)
+                {
+                    out_stream << '(' << i << ',' << j << ") " << val << '\n';
+                }
+            }
+        }   
     }
 }
 

@@ -6,7 +6,7 @@ CC = g++
 name = ford-fulkerson.out
 endif
 
-RUN_ARGS = -f ../input_w.dat -i 1 -l 2
+RUN_ARGS = -f ../input_w.dat -i 1 -l 6 -s
 
 $(name): main.cpp
 	$(CC) $< -o $(name)
