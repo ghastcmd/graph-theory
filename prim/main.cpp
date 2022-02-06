@@ -25,10 +25,8 @@ void get_intersection(vec_pair& inter, vec_pair& vec1, pqueue<int>& queue)
     }
 }
 
-void prim(graph g, std::stringstream& out_stream, int start_vertex, int out_vert, bool setted_solution)
-{
-    (void)setted_solution;
-    
+void prim(graph g, std::stringstream& out_stream, int start_vertex, bool setted_solution)
+{    
     constexpr int INF = std::numeric_limits<int>::max();
 
     std::vector<int> cost(g.V.size());
@@ -132,7 +130,7 @@ int main(int argc, char **argv)
 
     std::stringstream out_stream;
 
-    prim(G, out_stream, params.in_vertex, params.out_vertex, params.setted_solution);
+    prim(G, out_stream, params.in_vertex, params.setted_solution);
 
     if (params.setted_file_output)
     {
