@@ -29,68 +29,55 @@ void bellman_ford(graph g, std::stringstream& out_stream, int start_vertex, int 
 {
     (void)setted_solution;
     
-    constexpr int INF = std::numeric_limits<int>::max();
+    constexpr int INF = std::numeric_limits<int>::max() - 100;
 
-    std::vector<int> cost(g.V.size());
-    std::vector<int> prev(g.V.size());
+    using matrix = typename std::vector<std::vector<int>>;
 
-    for (auto v: g.V)
+    const auto vert_size = g.V.size();
+
+    matrix weights (vert_size, std::vector<int>(vert_size, INF));
+    matrix dist (vert_size-1, std::vector<int>(vert_size, INF));
+
+    for (size_t i = 1, max_i = weights.size(); i < max_i; i++)
     {
-        cost[v] = INF;
-        prev[v] = -1;
+        for (const auto vv: g.edges[i])
+        {
+            weights[i][vv.first] = vv.second;
+        }
     }
 
-    cost[start_vertex] = 0;
+    dist[0][start_vertex] = 0;
 
-    // declarar queue com os vértices e pesos com dist
-    pqueue<int> queue(g.V, cost);
-
-    vec_pair intersection;
-
-    while (!queue.empty())
+    for (size_t l = 1, max_l = vert_size; l < max_l - 1; l++)
     {
-        const auto u = queue.pop_front(); // acessa o primeiro item da fila
-
-        get_intersection(intersection, g.edges[u], queue);
-
-        for (const auto& v: intersection)
+        for (size_t k = 1; k < max_l; k++)
         {
-            const auto weight = v.second;
-            const auto vert = v.first;
-            if (cost[vert] > weight)
+            int min_ww = INF;
+            for (size_t i = 1; i < max_l; i++)
             {
-                cost[vert] = weight;
-                prev[vert] = u;
-                queue.set_priority(vert, cost[vert]);
+                auto val = INF;
+                if (dist[l-1][i] != INF && weights[i][k] != INF)
+                {
+                    val = dist[l-1][i] + weights[i][k];
+                }
+                min_ww = std::min(min_ww, val);
             }
+
+            dist[l][k] = std::min(dist[l-1][k], min_ww);
         }
-        intersection.clear();
     }
 
-    if (setted_solution)
+    if (out_vert == 0)
     {
-        std::vector<std::pair<int, int>> solution;
-        for (size_t i = 1, max_n = prev.size(); i < max_n; i++)
+        for (size_t i = 1, max = dist[vert_size-2].size(); i < max; i++)
         {
-            const auto val = prev[i];
-            if (val != -1)
-                solution.push_back({prev[i], i});
+            std::cout << i << ':' << dist[vert_size-2][i] << ' ';
         }
-        std::sort(solution.begin(), solution.end());
-        for (const auto& val: solution)
-        {
-            out_stream << '(' << val.first << ',' << val.second << ") ";
-        }
-        out_stream << '\n';
+        std::cout << '\n';
     }
     else
     {
-        size_t sum = 0;
-        for (size_t i = 1, max = cost.size(); i < max; i++)
-        {
-            sum += cost[i];
-        }
-        out_stream << sum << '\n';
+        std::cout << dist[vert_size-2][out_vert] << '\n';
     }
 }
 
@@ -100,8 +87,8 @@ void usage(int argc, char **argv)
 -h           : mostra o help (este texto)
 -f <arquivo> : indica o "arquivo" que contém o grafo de entrada
 -o <arquivo> : redireciona a saida para o "arquivo"
--s           : mostra a solução (em ordem crescente)
 -i <vertice> : vértice inicial
+-l <vertice> : vértice final
 )");
 
     std::cout << "O uso do programa é:\n" << argv[0] << help;

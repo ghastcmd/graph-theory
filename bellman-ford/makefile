@@ -6,7 +6,7 @@ CC = g++
 name = bellman-ford.out
 endif
 
-RUN_ARGS = -f ../input_w.dat -i 1 -s
+RUN_ARGS = -f ../input_w.dat -i 1 -l 2
 
 $(name): main.cpp
 	$(CC) $< -o $(name)
