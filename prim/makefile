@@ -1,12 +1,12 @@
 ifeq ($(OS), Windows_NT)
 CC = clang++
-name = dijkstra.exe
+name = prim.exe
 else
 CC = g++
-name = dijkstra.out
+name = prim.out
 endif
 
-RUN_ARGS = -f ../input_w.dat -i 1
+RUN_ARGS = -f ../input_w.dat -i 1 -s
 
 $(name): main.cpp
 	$(CC) $< -o $(name)
@@ -15,8 +15,4 @@ run: $(name)
 	./$(name) $(RUN_ARGS)
 
 clean:
-	del dijkstra.exe
-	del dijkstra
-
-pipe: $(name)
-	./dijkstra.out < input_w.dat
+	del prim.*
