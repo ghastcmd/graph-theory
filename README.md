@@ -18,4 +18,4 @@ Para compilar os programas, basta entrar na pasta desejada e digitar `make`, que
 
 Nos sistemas linux, o executável terá a extensão `.out`, e nos sistemas Windows, terá a extensão `.exe`.
 
-Para compilar e executar os binários, basta digitar `make run`.
+Para compilar e executar os binários, basta digitar `make run` (lembrando que para tal, deverás modificar a variável do Makefile chamada `RUN_ARGS`, que são os argumentos da execução do binário). Esse comando foi utilizado para teste dos algoritmos, mas pode ser útil para ter uma noção da execução dos mesmos.
