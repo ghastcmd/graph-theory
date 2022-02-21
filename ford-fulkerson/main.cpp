@@ -55,7 +55,8 @@ void ford_fulkerson(graph& g, std::stringstream& out_stream, int start_vertex, i
 
     const auto vert_size = g.V.size();
     matrix residual_flux (vert_size, std::vector<int>(vert_size, 0));
-   
+    matrix solution (vert_size, std::vector<int>(vert_size, 0));
+
     for (size_t i = 1; i < vert_size; i++)
     {
         for (const auto& value: g.edges[i])
@@ -84,6 +85,8 @@ void ford_fulkerson(graph& g, std::stringstream& out_stream, int start_vertex, i
             u = parents[v];
             residual_flux[u][v] -= path_flow;
             residual_flux[v][u] += path_flow;
+            
+            solution[u][v] += path_flow;
         }
 
         max_flow += path_flow;
@@ -99,7 +102,7 @@ void ford_fulkerson(graph& g, std::stringstream& out_stream, int start_vertex, i
         {
             for (size_t j = 1; j < vert_size; j++)
             {
-                const auto val = residual_flux[i][j];
+                const auto val = solution[i][j];
                 if (val != 0)
                 {
                     out_stream << '(' << i << ',' << j << ") " << val << '\n';
