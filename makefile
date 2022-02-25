@@ -12,3 +12,9 @@ d_bellman-ford:
 
 d_ford-fulkerson:
 	$(MAKE) -C ford-fulkerson $(ARGS)
+
+clean:
+	$(MAKE) d_dijkstra ARGS=clean
+	$(MAKE) d_prim ARGS=clean
+	$(MAKE) d_bellman-ford ARGS=clean
+	$(MAKE) d_ford-fulkerson ARGS=clean
