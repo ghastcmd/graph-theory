@@ -71,18 +71,16 @@ void ford_fulkerson(graph& g, std::stringstream& out_stream, int start_vertex, i
 
     while (find_paths_bfs(residual_flux, start_vertex, out_vertex, parents))
     {
-        int u, v;
-
         // Essa parte calcula o gargalo do caminho
         auto path_flow = INF;
-        for (v = out_vertex; v != start_vertex; v = parents[v]) {
-            u = parents[v];
+        for (auto v = out_vertex; v != start_vertex; v = parents[v]) {
+            auto u = parents[v];
             path_flow = std::min(path_flow, residual_flux[u][v]);
         }
  
         // Essa parte atualiza os fluxos da parte residual
-        for (v = out_vertex; v != start_vertex; v = parents[v]) {
-            u = parents[v];
+        for (auto v = out_vertex; v != start_vertex; v = parents[v]) {
+            auto u = parents[v];
             residual_flux[u][v] -= path_flow;
             residual_flux[v][u] += path_flow;
             
